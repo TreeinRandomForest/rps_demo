@@ -5,6 +5,7 @@ from model import *
 from utils import *
 from data import *
 from train import *
+from export import *
 
 n_outputs = 3 #how many classes to predict
 batch_size = 64
@@ -28,3 +29,5 @@ net, optimizer = train(n_epochs,
                        optimizer, 
                        print_freq,
                        device)
+
+export_to_onnx(net, ds_train[0][0].unsqueeze(0).shape, device)
