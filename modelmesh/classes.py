@@ -1,3 +1,3 @@
-rps_classes = {0: 'rock',
-               1: 'paper',
+rps_classes = {0: 'paper',
+               1: 'rock',
                2: 'scissors'}
