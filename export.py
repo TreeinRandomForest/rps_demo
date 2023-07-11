@@ -7,14 +7,14 @@ from model import *
 from PIL import Image
 import numpy as np
 
-def export_to_onnx(net, inp_size, device):
-    dummy_input = torch.randn(inp_size, requires_grad=True).to(device)
+def export_to_onnx(net, dummy_input, device, out_fname):
+    #dummy_input = torch.randn(inp_size, requires_grad=True).to(device)
     net = net.to(device)
     net = net.eval()
     
     torch.onnx.export(net,
                       dummy_input,
-                      'resnet_finetuned.onnx',
+                      out_fname,
                       export_params=True,
                       input_names = ['input'],
                       output_names = ['output'],
