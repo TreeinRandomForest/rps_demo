@@ -1,6 +1,6 @@
 ### Training
 
-`python main.py`
+`python main.py --train_folder '../Rock-Paper-Scissors/train_aug24/' --test_folder '../Rock-Paper-Scissors/test/ --onnx_outfile 'test.onnx' --onnx_wrapped_outfile 'test_wrapped.onnx' --n_epochs=20`
 
 ### Inference
 
