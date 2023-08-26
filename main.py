@@ -51,6 +51,10 @@ if __name__ == '__main__':
     print(f'Loading pre-trained network and adding head...')
     net, transform = get_resnet()
     add_head(net, n_outputs)
+
+    transform = tfms.Compose([transform, 
+                              tfms.RandomRotation(45),
+                              tfms.RandomHorizontalFlip()])
     print(f'DONE Loading pre-trained network and adding head\n')
 
     print(f'Loading criterion, optimizer and dataloaders...')
