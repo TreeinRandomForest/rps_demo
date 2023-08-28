@@ -16,7 +16,7 @@ parser.add_argument('--train_folder', required=True)
 parser.add_argument('--test_folder', required=True)
 parser.add_argument('--n_epochs', type=int, default=10, required=False)
 parser.add_argument('--onnx_outfile', required=True)
-parser.add_argument('--onnx_wrapped_outfile', required=True)
+#parser.add_argument('--onnx_wrapped_outfile', required=True)
 args = parser.parse_args()
 
 
@@ -37,7 +37,7 @@ n_epochs = args.n_epochs
 train_folder = args.train_folder
 test_folder = args.test_folder
 onnx_outfile = args.onnx_outfile
-onnx_wrapped_outfile = args.onnx_wrapped_outfile
+#onnx_wrapped_outfile = args.onnx_wrapped_outfile
 print_freq = 1
 
 print(f'Training Data: {train_folder}')
@@ -50,6 +50,7 @@ if __name__ == '__main__':
 
     print(f'Loading pre-trained network and adding head...')
     net, transform = get_resnet()
+    #unfreeze_weights(net)
     add_head(net, n_outputs)
 
     transform = tfms.Compose([transform, 
@@ -91,6 +92,7 @@ if __name__ == '__main__':
 
 
     #wrapped model - expects tensor scaled by 1/255.
+    '''
     inference_transform = CustomTransformList(inference_transform_list)
     model = Model(net, inference_transform)
 
@@ -99,3 +101,4 @@ if __name__ == '__main__':
     dummy_input = dummy_input / 255.
 
     export_to_onnx(model, dummy_input, device, onnx_wrapped_outfile)
+    '''
