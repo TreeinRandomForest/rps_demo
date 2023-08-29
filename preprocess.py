@@ -2,6 +2,8 @@ import cv2
 import os
 import glob
 from PIL import Image
+import numpy as np
+import shutil
 
 def canny(fname): 
     img = cv2.imread(fname) 
@@ -22,9 +24,10 @@ def contours(fname):
                                            cv2.RETR_TREE, 
                                            cv2.CHAIN_APPROX_SIMPLE)
     
-    cv2.drawContours(img, contours, -1, (0,255,0), 3)
+    img_zeros = np.zeros_like(img)
+    cv2.drawContours(img_zeros, contours, -1, (0,255,0), 3)
     
-    return img
+    return img_zeros
 
 
 def preprocess(in_folder, 
@@ -61,3 +64,43 @@ def preprocess(in_folder,
 
             img.save(out_folder, subfolder, file)
             '''
+
+def create_test_folder(in_folder, test_pct=0.2, seed=0):
+    np.random.seed(seed)
+
+    assert 0 < test_pct < 1
+
+    out_folder = in_folder.replace('train', 'test')
+
+    if os.path.exists(out_folder):
+        raise ValueError(f'out_folder {out_folder} already exists')
+    os.makedirs(out_folder)
+
+    for subdir in os.listdir(in_folder): #this is brittle - expects only labels here
+        os.makedirs(f'{out_folder}{os.sep}{subdir}')
+
+        in_files = glob.glob(f'{in_folder}{os.sep}{subdir}/*')
+
+        test_files = np.random.choice(in_files,
+                                      size=int(test_pct * len(in_files)),
+                                      replace=False)
+        
+        for f in test_files:
+            shutil.move(f, f'{out_folder}{os.sep}{subdir}')
+
+'''
+%loadext autoreload
+%autoreload 2
+
+from preprocess import *
+
+create_test_folder('../Rock-Paper-Scissors/train_aug29')
+
+preprocess('../Rock-Paper-Scissors/train_aug29', '../Rock-Paper-Scissors/train_aug29_edges', canny)
+
+preprocess('../Rock-Paper-Scissors/test_aug29', '../Rock-Paper-Scissors/test_aug29_edges', canny)
+
+preprocess('../Rock-Paper-Scissors/train_aug29', '../Rock-Paper-Scissors/train_aug29_contoursnobase', contours)
+
+preprocess('../Rock-Paper-Scissors/test_aug29', '../Rock-Paper-Scissors/test_aug29_contoursnobase', contours)
+'''
